@@ -1,9 +1,19 @@
-import { PutItemCommand, PutItemCommandInput } from "@aws-sdk/client-dynamodb";
+import {
+	GetItemCommand,
+	GetItemCommandInput,
+	PutItemCommand,
+	PutItemCommandInput,
+} from "@aws-sdk/client-dynamodb";
 import { hash } from "bcrypt";
 import shortUUID from "short-uuid";
 
 import { client } from "./clientDynamo";
-import { INewContainer, entityPrefix, newTodo as INewTodo } from "./types";
+import {
+	INewContainer,
+	entityPrefix,
+	newTodo as INewTodo,
+	DynamoUserResponse,
+} from "./types";
 
 const TABLE_NAME = "todo";
 
@@ -113,4 +123,28 @@ async function newTodo(data: INewTodo) {
 	}
 }
 
-export { newUser, newContainer, newTodo };
+async function getUser(username: string) {
+	const pk = `${entityPrefix.user}${username}`;
+	const input: GetItemCommandInput = {
+		TableName: TABLE_NAME,
+		Key: {
+			pk: {
+				S: pk,
+			},
+			sk: {
+				S: "user",
+			},
+		},
+	};
+	const gtIt = new GetItemCommand(input);
+
+	try {
+		const r = await client.send(gtIt);
+		const info = r.Item as unknown as DynamoUserResponse;
+		console.log("User info", info);
+	} catch (error) {
+		console.log("Error", error);
+	}
+}
+
+export { newUser, newContainer, newTodo, getUser };
