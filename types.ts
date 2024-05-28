@@ -4,7 +4,7 @@ export interface INewContainer {
 }
 
 export interface newTodo {
-	contentId: string;
+	containtId: string;
 	title: string;
 	content: string;
 	priority?: number;
