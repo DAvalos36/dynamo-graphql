@@ -14,6 +14,9 @@ dependencies:
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
+  short-uuid:
+    specifier: ^5.2.0
+    version: 5.2.0
 
 devDependencies:
   '@types/bcrypt':
@@ -947,6 +950,10 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
+  /any-base@1.1.0:
+    resolution: {integrity: sha512-uMgjozySS8adZZYePpaWs8cxB9/kdzmpX6SgJZ+wbz1K5eYk5QMYDVJaZKhxyIHUdnnJkfR7SVgStgH7LkGUyg==}
+    dev: false
+
   /aproba@2.0.0:
     resolution: {integrity: sha512-lYe4Gx7QT+MKGbDsA+Z+he/Wtef0BiwDOlK/XkBrdfsh9J/jPPXbX0tE9x9cl27Tmu5gg3QUbUrQYa/y+KOHPQ==}
     dev: false
@@ -1249,6 +1256,14 @@ packages:
 
   /set-blocking@2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
+    dev: false
+
+  /short-uuid@5.2.0:
+    resolution: {integrity: sha512-296/Nzi4DmANh93iYBwT4NoYRJuHnKEzefrkSagQbTH/A6NTaB68hSPDjm5IlbI5dx9FXdmtqPcj6N5H+CPm6w==}
+    engines: {node: '>=14'}
+    dependencies:
+      any-base: 1.1.0
+      uuid: 9.0.1
     dev: false
 
   /signal-exit@3.0.7:
