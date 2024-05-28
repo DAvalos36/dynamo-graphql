@@ -3,8 +3,7 @@ import { hash } from "bcrypt";
 import shortUUID from "short-uuid";
 
 import { client } from "./clientDynamo";
-import { INewContainer } from "./types";
-import { entityPrefix } from "./types";
+import { INewContainer, entityPrefix, newTodo as INewTodo } from "./types";
 
 const TABLE_NAME = "todo";
 
@@ -71,4 +70,47 @@ async function newContainer(data: INewContainer) {
 	}
 }
 
-export { newUser, newContainer };
+async function newTodo(data: INewTodo) {
+	const pk = `${entityPrefix.todo}${shortUUID.generate()}`;
+	const date = Date.now();
+	const input: PutItemCommandInput = {
+		TableName: TABLE_NAME,
+		Item: {
+			pk: {
+				S: pk,
+			},
+			sk: {
+				S: pk,
+			},
+			title: {
+				S: data.title,
+			},
+			content: {
+				S: data.content,
+			},
+			gs1_pk: {
+				S: data.containtId,
+			},
+			gs1_sk: {
+				S: pk,
+			},
+			creationDate: {
+				S: date.toString(),
+			},
+			priority: {
+				N: data.priority ? data.priority.toString() : "0",
+			},
+		},
+	};
+
+	const pi = new PutItemCommand(input);
+
+	try {
+		const r = await client.send(pi);
+		console.log("Tara (todo) creada corretamente", r);
+	} catch (error) {
+		console.log("ERROR al crear tarea", error);
+	}
+}
+
+export { newUser, newContainer, newTodo };
