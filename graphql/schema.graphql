@@ -21,3 +21,12 @@ type Query {
     getContainers(userId: String!): [Container]!
     getTodos(containerId: String!): [Todo]!
 }
+
+type Mutation {
+	newContainer(userId: String!, title: String!): String!
+	newTodo (
+		containtId: String!
+		title: String!
+		content: String!
+		priority: Int): String!
+}
