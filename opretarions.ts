@@ -1,11 +1,11 @@
 import {
-	GetItemCommand,
-	GetItemCommandInput,
-	PutItemCommand,
-	PutItemCommandInput,
+	GetCommand,
+	GetCommandInput,
+	PutCommand,
+	PutCommandInput,
 	QueryCommand,
 	QueryCommandInput,
-} from "@aws-sdk/client-dynamodb";
+} from "@aws-sdk/lib-dynamodb";
 import { hash } from "bcrypt";
 import shortUUID from "short-uuid";
 
@@ -15,6 +15,7 @@ import {
 	entityPrefix,
 	newTodo as INewTodo,
 	DynamoUserResponse,
+	DynamoContainerResponse,
 } from "./types";
 
 const TABLE_NAME = "todo";
@@ -24,27 +25,19 @@ async function newUser(username: string, password: string) {
 	const date = Date.now();
 	const usname = `${entityPrefix.user}${username}`;
 
-	const input: PutItemCommandInput = {
+	const input: PutCommandInput = {
 		TableName: TABLE_NAME,
 		ConditionExpression: "attribute_not_exists(pk)",
 		ReturnValuesOnConditionCheckFailure: "ALL_OLD",
 		Item: {
-			pk: {
-				S: usname,
-			},
-			sk: {
-				S: "user",
-			},
-			password: {
-				S: ha,
-			},
-			creationDate: {
-				S: date.toString(),
-			},
+			pk: usname,
+			sk: "user",
+			password: ha,
+			creationDate: date.toString(),
 		},
 	};
 
-	const putIdk = new PutItemCommand(input);
+	const putIdk = new PutCommand(input);
 
 	try {
 		const r = await client.send(putIdk);
@@ -57,25 +50,17 @@ async function newUser(username: string, password: string) {
 async function newContainer(data: INewContainer) {
 	const sk = `${entityPrefix.container}${shortUUID.generate()}`;
 	const date = Date.now();
-	const input: PutItemCommandInput = {
+	const input: PutCommandInput = {
 		TableName: TABLE_NAME,
 		Item: {
-			pk: {
-				S: data.userId,
-			},
-			sk: {
-				S: sk,
-			},
-			title: {
-				S: data.title,
-			},
-			creationDate: {
-				S: date.toString(),
-			},
+			pk: data.userId,
+			sk: sk,
+			title: data.title,
+			creationDate: date.toString(),
 		},
 	};
 
-	const pi = new PutItemCommand(input);
+	const pi = new PutCommand(input);
 	try {
 		const r = await client.send(pi);
 		console.log("Container creado correctamete", r);
@@ -87,37 +72,21 @@ async function newContainer(data: INewContainer) {
 async function newTodo(data: INewTodo) {
 	const pk = `${entityPrefix.todo}${shortUUID.generate()}`;
 	const date = Date.now();
-	const input: PutItemCommandInput = {
+	const input: PutCommandInput = {
 		TableName: TABLE_NAME,
 		Item: {
-			pk: {
-				S: pk,
-			},
-			sk: {
-				S: pk,
-			},
-			title: {
-				S: data.title,
-			},
-			content: {
-				S: data.content,
-			},
-			gs1_pk: {
-				S: data.containtId,
-			},
-			gs1_sk: {
-				S: pk,
-			},
-			creationDate: {
-				S: date.toString(),
-			},
-			priority: {
-				N: data.priority ? data.priority.toString() : "0",
-			},
+			pk: pk,
+			sk: pk,
+			title: data.title,
+			content: data.content,
+			gs1_pk: data.containtId,
+			gs1_sk: pk,
+			creationDate: date.toString(),
+			priority: data.priority ? data.priority.toString() : "0",
 		},
 	};
 
-	const pi = new PutItemCommand(input);
+	const pi = new PutCommand(input);
 
 	try {
 		const r = await client.send(pi);
@@ -129,18 +98,14 @@ async function newTodo(data: INewTodo) {
 
 async function getUser(username: string) {
 	const pk = `${entityPrefix.user}${username}`;
-	const input: GetItemCommandInput = {
+	const input: GetCommandInput = {
 		TableName: TABLE_NAME,
 		Key: {
-			pk: {
-				S: pk,
-			},
-			sk: {
-				S: "user",
-			},
+			pk: pk,
+			sk: "user",
 		},
 	};
-	const gtIt = new GetItemCommand(input);
+	const gtIt = new GetCommand(input);
 
 	try {
 		const r = await client.send(gtIt);
@@ -157,8 +122,8 @@ async function getContainers(username: string) {
 		TableName: TABLE_NAME,
 		KeyConditionExpression: "pk = :pk AND begins_with(sk, :prefix)",
 		ExpressionAttributeValues: {
-			":pk": { S: pk }, //Aqui se asigna el valor de pk (el que actualmente se encuentra en la constante)
-			":prefix": { S: entityPrefix.container },
+			":pk": pk, //Aqui se asigna el valor de pk (el que actualmente se encuentra en la constante)
+			":prefix": entityPrefix.container,
 		},
 	};
 	const qC = new QueryCommand(input);
@@ -166,6 +131,8 @@ async function getContainers(username: string) {
 	try {
 		const r = await client.send(qC);
 		console.log("Query response", r.Items);
+		const content = [];
+		return r;
 	} catch (error) {
 		console.log("Ocurrio un error al intentar query", error);
 	}
@@ -178,7 +145,7 @@ async function getTodos(containtId: string) {
 		IndexName: "gsi-todo",
 		KeyConditionExpression: "gs1_pk = :gs1_pk ",
 		ExpressionAttributeValues: {
-			":gs1_pk": { S: pk }, //Aqui se asigna el valor de pk (el que actualmente se encuentra en la constante)
+			":gs1_pk": pk, //Aqui se asigna el valor de pk (el que actualmente se encuentra en la constante)
 		},
 	};
 	const qC = new QueryCommand(input);
