@@ -1,0 +1,23 @@
+type Container {
+    pk:  String
+	sk:  String
+	creationDate:  String
+	title:  String
+}
+
+type Todo {
+    pk:  String 
+	sk:  String 
+	creationDate:  String 
+	title:  String 
+	content:  String 
+	priority: Int
+	gs1_pk:  String 
+	gs1_sk:  String 
+}
+
+type Query {
+    hello: String
+    getContainers(userId: String!): [Container]!
+    getTodos(contianerId: String!): [Todo]!
+}
