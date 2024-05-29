@@ -28,3 +28,14 @@ export interface DynamoContainerResponse {
 	creationDate: { S: string };
 	title: { S: string };
 }
+
+export interface DynamoTodoResponse {
+	pk: { S: string };
+	sk: { S: string };
+	creationDate: { S: string };
+	title: { S: string };
+	content: { S: string };
+	priority: { N: string };
+	gs1_pk: { S: string };
+	gs1_sk: { S: string };
+}

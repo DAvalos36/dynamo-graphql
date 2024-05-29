@@ -171,4 +171,24 @@ async function getContainers(username: string) {
 	}
 }
 
-export { newUser, newContainer, newTodo, getUser, getContainers };
+async function getTodos(containtId: string) {
+	const pk = `${entityPrefix.container}${containtId}`;
+	const input: QueryCommandInput = {
+		TableName: TABLE_NAME,
+		IndexName: "gsi-todo",
+		KeyConditionExpression: "gs1_pk = :gs1_pk ",
+		ExpressionAttributeValues: {
+			":gs1_pk": { S: pk }, //Aqui se asigna el valor de pk (el que actualmente se encuentra en la constante)
+		},
+	};
+	const qC = new QueryCommand(input);
+
+	try {
+		const r = await client.send(qC);
+		console.log("Query response", r.Items);
+	} catch (error) {
+		console.log("Ocurrio un error al intentar query", error);
+	}
+}
+
+export { newUser, newContainer, newTodo, getUser, getContainers, getTodos };
