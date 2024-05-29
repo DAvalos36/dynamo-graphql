@@ -15,10 +15,16 @@ export enum entityPrefix {
 	container = "c#",
 	todo = "t#",
 }
-
 export interface DynamoUserResponse {
 	pk: { S: string };
 	sk: { S: string };
 	password: { S: string };
 	creationDate: { S: string };
+}
+
+export interface DynamoContainerResponse {
+	pk: { S: string };
+	sk: { S: string };
+	creationDate: { S: string };
+	title: { S: string };
 }

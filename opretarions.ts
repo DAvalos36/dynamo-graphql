@@ -3,6 +3,8 @@ import {
 	GetItemCommandInput,
 	PutItemCommand,
 	PutItemCommandInput,
+	QueryCommand,
+	QueryCommandInput,
 } from "@aws-sdk/client-dynamodb";
 import { hash } from "bcrypt";
 import shortUUID from "short-uuid";
@@ -24,6 +26,8 @@ async function newUser(username: string, password: string) {
 
 	const input: PutItemCommandInput = {
 		TableName: TABLE_NAME,
+		ConditionExpression: "attribute_not_exists(pk)",
+		ReturnValuesOnConditionCheckFailure: "ALL_OLD",
 		Item: {
 			pk: {
 				S: usname,
@@ -147,4 +151,24 @@ async function getUser(username: string) {
 	}
 }
 
-export { newUser, newContainer, newTodo, getUser };
+async function getContainers(username: string) {
+	const pk = `${entityPrefix.user}${username}`;
+	const input: QueryCommandInput = {
+		TableName: TABLE_NAME,
+		KeyConditionExpression: "pk = :pk AND begins_with(sk, :prefix)",
+		ExpressionAttributeValues: {
+			":pk": { S: pk }, //Aqui se asigna el valor de pk (el que actualmente se encuentra en la constante)
+			":prefix": { S: entityPrefix.container },
+		},
+	};
+	const qC = new QueryCommand(input);
+
+	try {
+		const r = await client.send(qC);
+		console.log("Query response", r.Items);
+	} catch (error) {
+		console.log("Ocurrio un error al intentar query", error);
+	}
+}
+
+export { newUser, newContainer, newTodo, getUser, getContainers };
