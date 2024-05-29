@@ -11,6 +11,9 @@ dependencies:
   '@aws-sdk/client-dynamodb':
     specifier: ^3.584.0
     version: 3.584.0
+  '@aws-sdk/util-dynamodb':
+    specifier: ^3.585.0
+    version: 3.585.0(@aws-sdk/client-dynamodb@3.584.0)
   bcrypt:
     specifier: ^5.1.1
     version: 5.1.1
@@ -665,6 +668,16 @@ packages:
     engines: {node: '>=16.0.0'}
     dependencies:
       '@smithy/types': 3.0.0
+      tslib: 2.6.2
+    dev: false
+
+  /@aws-sdk/util-dynamodb@3.585.0(@aws-sdk/client-dynamodb@3.584.0):
+    resolution: {integrity: sha512-VqHZ8atNWaQwJ5tuKYkEwArhcAAZmFeDM/tE5mhUIzQGvXEmU58H6GsBw43ZVFYERMlUwrsp9fR2YxRprH7Iow==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      '@aws-sdk/client-dynamodb': ^3.585.0
+    dependencies:
+      '@aws-sdk/client-dynamodb': 3.584.0
       tslib: 2.6.2
     dev: false
 
