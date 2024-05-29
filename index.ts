@@ -57,6 +57,21 @@ const resolvers = {
 			const pk = await newContainer({ title: args.title, userId: args.userId });
 			return pk;
 		},
+		newTodo: async (
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			_: any,
+			args: {
+				containtId: string;
+				title: string;
+				content: string;
+				priority?: number;
+			},
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			contextValue: any,
+		) => {
+			const pk = await newTodo(args);
+			return pk;
+		},
 	},
 };
 const server = new ApolloServer({

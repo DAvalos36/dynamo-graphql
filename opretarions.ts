@@ -80,7 +80,9 @@ async function newTodo(data: INewTodo) {
 			sk: pk,
 			title: data.title,
 			content: data.content,
-			gs1_pk: data.containtId,
+			gs1_pk: data.containtId.startsWith("#c")
+				? data.containtId
+				: `#c${data.containtId}`,
 			gs1_sk: pk,
 			creationDate: date.toString(),
 			priority: data.priority ? data.priority.toString() : "0",
