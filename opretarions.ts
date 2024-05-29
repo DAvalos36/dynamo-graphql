@@ -53,7 +53,7 @@ async function newContainer(data: INewContainer) {
 	const input: PutCommandInput = {
 		TableName: TABLE_NAME,
 		Item: {
-			pk: data.userId,
+			pk: data.userId.startsWith("u#") ? data.userId : `u#${data.userId}`, //Quitar esto
 			sk: sk,
 			title: data.title,
 			creationDate: date.toString(),
@@ -64,6 +64,7 @@ async function newContainer(data: INewContainer) {
 	try {
 		const r = await client.send(pi);
 		console.log("Container creado correctamete", r);
+		return sk;
 	} catch (error) {
 		console.log("Ocurrio un error al crear un contenedor", error);
 	}
@@ -91,6 +92,7 @@ async function newTodo(data: INewTodo) {
 	try {
 		const r = await client.send(pi);
 		console.log("Tara (todo) creada corretamente", r);
+		return pk;
 	} catch (error) {
 		console.log("ERROR al crear tarea", error);
 	}

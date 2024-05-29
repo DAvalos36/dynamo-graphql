@@ -45,6 +45,19 @@ const resolvers = {
 			return r;
 		},
 	},
+
+	Mutation: {
+		newContainer: async (
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			_: any,
+			args: { userId: string; title: string },
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			contextValue: any,
+		) => {
+			const pk = await newContainer({ title: args.title, userId: args.userId });
+			return pk;
+		},
+	},
 };
 const server = new ApolloServer({
 	typeDefs,
