@@ -131,8 +131,7 @@ async function getContainers(username: string) {
 	try {
 		const r = await client.send(qC);
 		console.log("Query response", r.Items);
-		const content = [];
-		return r;
+		return r.Items;
 	} catch (error) {
 		console.log("Ocurrio un error al intentar query", error);
 	}
@@ -152,7 +151,7 @@ async function getTodos(containtId: string) {
 
 	try {
 		const r = await client.send(qC);
-		console.log("Query response", r.Items);
+		return r.Items;
 	} catch (error) {
 		console.log("Ocurrio un error al intentar query", error);
 	}
