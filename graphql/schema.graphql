@@ -19,5 +19,5 @@ type Todo {
 type Query {
     hello: String
     getContainers(userId: String!): [Container]!
-    getTodos(contianerId: String!): [Todo]!
+    getTodos(containerId: String!): [Todo]!
 }
