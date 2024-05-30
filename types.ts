@@ -16,28 +16,28 @@ export enum entityPrefix {
 	todo = "t#",
 }
 export interface DynamoUserResponse {
-	pk: { S: string };
-	sk: { S: string };
-	password: { S: string };
-	creationDate: { S: string };
+	pk: string;
+	sk: string;
+	password: string;
+	creationDate: string;
 }
 
 export interface DynamoContainerResponse {
-	pk: { S: string };
-	sk: { S: string };
-	creationDate: { S: string };
-	title: { S: string };
+	pk: string;
+	sk: string;
+	creationDate: string;
+	title: string;
 }
 
 export interface DynamoTodoResponse {
-	pk: { S: string };
-	sk: { S: string };
-	creationDate: { S: string };
-	title: { S: string };
-	content: { S: string };
-	priority: { N: string };
-	gs1_pk: { S: string };
-	gs1_sk: { S: string };
+	pk: string;
+	sk: string;
+	creationDate: string;
+	title: string;
+	content: string;
+	priority: string;
+	gs1_pk: string;
+	gs1_sk: string;
 }
 
 export interface DeleteContainer {
