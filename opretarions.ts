@@ -7,6 +7,7 @@ import {
 	QueryCommandInput,
 	DeleteCommand,
 	DeleteCommandInput,
+	UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { hash } from "bcrypt";
 import shortUUID from "short-uuid";
@@ -20,6 +21,8 @@ import {
 	DynamoContainerResponse,
 	DeleteContainer,
 	DeleteTodo,
+	IUpdateContainer,
+	IUpdateTodo,
 } from "./types";
 import { table } from "node:console";
 
@@ -190,6 +193,25 @@ async function deleteTodo(data: DeleteTodo) {
 	const r = await client.send(dd);
 	console.log(r);
 }
+
+async function updateContainer(data: IUpdateContainer) {
+	const upD = new UpdateCommand({
+		TableName: TABLE_NAME,
+		Key: {
+			pk: data.reqUserId,
+			sk: data.title,
+		},
+		UpdateExpression: "set titlte = :title",
+		ExpressionAttributeValues: {
+			":title": data.title,
+		},
+		ReturnValues: "ALL_NEW",
+	});
+
+	const r = await client.send(upD);
+	console.log(r);
+}
+async function updateTodo(params: IUpdateTodo) {}
 
 export {
 	newUser,

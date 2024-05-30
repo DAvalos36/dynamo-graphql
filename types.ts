@@ -47,3 +47,16 @@ export interface DeleteContainer {
 export interface DeleteTodo {
 	todoId: string;
 }
+
+export interface IUpdateContainer {
+	reqUserId: string;
+	reqSk: string;
+	title: string;
+}
+export interface IUpdateTodo {
+	reqPk: string;
+	title?: string;
+	content?: string;
+	priority?: string;
+	endDate?: number;
+}
