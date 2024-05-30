@@ -5,6 +5,8 @@ import {
 	PutCommandInput,
 	QueryCommand,
 	QueryCommandInput,
+	DeleteCommand,
+	DeleteCommandInput,
 } from "@aws-sdk/lib-dynamodb";
 import { hash } from "bcrypt";
 import shortUUID from "short-uuid";
@@ -16,7 +18,10 @@ import {
 	newTodo as INewTodo,
 	DynamoUserResponse,
 	DynamoContainerResponse,
+	DeleteContainer,
+	DeleteTodo,
 } from "./types";
+import { table } from "node:console";
 
 const TABLE_NAME = "todo";
 
@@ -161,4 +166,38 @@ async function getTodos(containtId: string) {
 	}
 }
 
-export { newUser, newContainer, newTodo, getUser, getContainers, getTodos };
+async function deleteContainer(data: DeleteContainer) {
+	const input: DeleteCommandInput = {
+		TableName: TABLE_NAME,
+		Key: {
+			pk: data.userId,
+			sk: data.containerId,
+		},
+	};
+	const dd = new DeleteCommand(input);
+	const r = await client.send(dd);
+	console.log(r);
+}
+async function deleteTodo(data: DeleteTodo) {
+	const input: DeleteCommandInput = {
+		TableName: TABLE_NAME,
+		Key: {
+			pk: data.todoId,
+			sk: data.todoId,
+		},
+	};
+	const dd = new DeleteCommand(input);
+	const r = await client.send(dd);
+	console.log(r);
+}
+
+export {
+	newUser,
+	newContainer,
+	newTodo,
+	getUser,
+	getContainers,
+	getTodos,
+	deleteContainer,
+	deleteTodo,
+};

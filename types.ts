@@ -39,3 +39,11 @@ export interface DynamoTodoResponse {
 	gs1_pk: { S: string };
 	gs1_sk: { S: string };
 }
+
+export interface DeleteContainer {
+	userId: string;
+	containerId: string;
+}
+export interface DeleteTodo {
+	todoId: string;
+}
