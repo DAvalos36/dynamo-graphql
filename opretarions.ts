@@ -170,6 +170,7 @@ async function getTodos(containtId: string) {
 }
 
 async function deleteContainer(data: DeleteContainer) {
+	console.log({ data });
 	const input: DeleteCommandInput = {
 		TableName: TABLE_NAME,
 		Key: {
@@ -178,8 +179,13 @@ async function deleteContainer(data: DeleteContainer) {
 		},
 	};
 	const dd = new DeleteCommand(input);
-	const r = await client.send(dd);
-	console.log(r);
+	try {
+		const r = await client.send(dd);
+		console.log(r);
+		return "Ok";
+	} catch (error) {
+		console.log("Errpr al eliminar container", error);
+	}
 }
 async function deleteTodo(data: DeleteTodo) {
 	const input: DeleteCommandInput = {

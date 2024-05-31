@@ -8,6 +8,9 @@ import {
 	getUser,
 	getContainers,
 	getTodos,
+	updateTodo,
+	deleteContainer,
+	deleteTodo,
 } from "./opretarions";
 
 import { readFileSync } from "node:fs";
@@ -70,6 +73,36 @@ const resolvers = {
 			contextValue: any,
 		) => {
 			const pk = await newTodo(args);
+			return pk;
+		},
+		deleteContainer: async (
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			_: any,
+			args: {
+				userId: string;
+				containerId: string;
+			},
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			contextValue: any,
+		) => {
+			const pk = await deleteContainer({
+				userId: args.userId,
+				containerId: args.containerId,
+			});
+			return pk;
+		},
+		deleteTodo: async (
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			_: any,
+			args: {
+				id: string;
+			},
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			contextValue: any,
+		) => {
+			const pk = await deleteTodo({
+				todoId: args.id,
+			});
 			return pk;
 		},
 	},
