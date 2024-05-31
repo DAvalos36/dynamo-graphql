@@ -1,23 +1,36 @@
 type Container {
+	"This value refers to owner id"
     pk:  String
+	"This value is te indentify"
 	sk:  String
 	creationDate:  String
 	title:  String
 }
 
 type Todo {
+	"""
+	**pk** & **sk** are same value
+	"""
     pk:  String 
+	"""
+	**pk** & **sk** are same value
+	"""
 	sk:  String 
 	creationDate:  String 
 	title:  String 
 	content:  String 
 	priority: Int
+	" This value refers to container id"
 	gs1_pk:  String 
 	gs1_sk:  String 
 }
 
 type Query {
-    hello: String
+	"Return a hello world :)"
+    hello: String!
+	"""
+	TODO: El parametro userId sera quitado posteriormente y asignado automaticamente mediante jwt
+	"""
     getContainers(userId: String!): [Container]!
     getTodos(containerId: String!): [Todo]!
 }
@@ -29,4 +42,12 @@ type Mutation {
 		title: String!
 		content: String!
 		priority: Int): String!
+	deleteContainer(userId: String!, containerId: String!): String
+	deleteTodo(pk: String!): String
+	updateContainer (userId: String!, containerId: String!, title: String!): Container!
+	updateTodo (
+		pk: String!
+		title: String
+		content: String
+		priority: Int): Todo!
 }
