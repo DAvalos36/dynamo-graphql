@@ -95,13 +95,13 @@ const resolvers = {
 			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 			_: any,
 			args: {
-				id: string;
+				pk: string;
 			},
 			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 			contextValue: any,
 		) => {
 			const pk = await deleteTodo({
-				todoId: args.id,
+				todoId: args.pk,
 			});
 			return pk;
 		},
