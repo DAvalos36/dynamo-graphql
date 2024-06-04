@@ -1,16 +1,9 @@
 //
 import "dotenv/config";
-import { client } from "./clientDynamo";
-import {
-	newContainer,
-	newUser,
-	newTodo,
-	updateTodo,
-	deleteContainer,
-	deleteTodo,
-} from "./opretarions";
+import { updateTodo, deleteContainer, deleteTodo } from "./opretarions";
 
 import { getContainers, getTodos, getUser } from "./resolvers/querys";
+import { newContainer, newTodo, newUser } from "./resolvers/creations";
 
 import { readFileSync } from "node:fs";
 import { ApolloServer } from "@apollo/server";
