@@ -1,14 +1,15 @@
 //
 import "dotenv/config";
-import { updateTodo, deleteContainer, deleteTodo } from "./opretarions";
+import { updateTodo } from "./opretarions";
 
 import { getContainers, getTodos, getUser } from "./resolvers/querys";
 import { newContainer, newTodo, newUser } from "./resolvers/creations";
+import { deleteContainer, deleteTodo } from "./resolvers/deletes";
 
 import { readFileSync } from "node:fs";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { unmarshall } from "@aws-sdk/util-dynamodb";
+
 const typeDefs = readFileSync("./graphql/schema.graphql", {
 	encoding: "utf-8",
 });
