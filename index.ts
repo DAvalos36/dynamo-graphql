@@ -5,13 +5,12 @@ import {
 	newContainer,
 	newUser,
 	newTodo,
-	getUser,
-	getContainers,
-	getTodos,
 	updateTodo,
 	deleteContainer,
 	deleteTodo,
 } from "./opretarions";
+
+import { getContainers, getTodos, getUser } from "./resolvers/querys";
 
 import { readFileSync } from "node:fs";
 import { ApolloServer } from "@apollo/server";
@@ -20,6 +19,8 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 const typeDefs = readFileSync("./graphql/schema.graphql", {
 	encoding: "utf-8",
 });
+
+export const TABLE_NAME = "todo";
 
 const resolvers = {
 	Query: {
