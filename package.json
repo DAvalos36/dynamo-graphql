@@ -6,13 +6,17 @@
     "start": "node ./dist/index.js",
     "build": "tsc",
     "dev": "tsnd --respawn index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/typescript": "4.0.7",
+    "@graphql-codegen/typescript-resolvers": "4.1.0",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.12.12",
     "typescript": "^5.4.5"
