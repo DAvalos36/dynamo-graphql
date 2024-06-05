@@ -2,10 +2,16 @@ import type { GetCommandInput, QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import { GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { client } from "../clientDynamo";
 import { TABLE_NAME } from "..";
-import { entityPrefix, type DynamoUserResponse } from "../types";
+import {
+	DynamoContainerResponse,
+	entityPrefix,
+	type DynamoTodoResponse,
+	type DynamoUserResponse,
+} from "../types";
+import { addPrefix, arrayQuitPrefix, quitPrefix } from "../utils";
 
 export async function getUser(username: string) {
-	const pk = `${entityPrefix.user}${username}`;
+	const pk = addPrefix({ prefix: entityPrefix.user, id: username });
 	const input: GetCommandInput = {
 		TableName: TABLE_NAME,
 		Key: {
@@ -25,7 +31,7 @@ export async function getUser(username: string) {
 }
 
 export async function getContainers(username: string) {
-	const pk = `${entityPrefix.user}${username}`;
+	const pk = addPrefix({ prefix: entityPrefix.user, id: username });
 	const input: QueryCommandInput = {
 		TableName: TABLE_NAME,
 		KeyConditionExpression: "pk = :pk AND begins_with(sk, :prefix)",
@@ -39,14 +45,14 @@ export async function getContainers(username: string) {
 	try {
 		const r = await client.send(qC);
 		console.log("Query response", r.Items);
-		return r.Items;
+		return arrayQuitPrefix({arr: r.Items as DynamoContainerResponse[], indexes: ["pk", "sk"]});
 	} catch (error) {
 		console.log("Ocurrio un error al intentar query", error);
 	}
 }
 
 export async function getTodos(containtId: string) {
-	const pk = `${entityPrefix.container}${containtId}`;
+	const pk = addPrefix({ prefix: entityPrefix.container, id: containtId });
 	const input: QueryCommandInput = {
 		TableName: TABLE_NAME,
 		IndexName: "gsi-todo",
@@ -59,7 +65,10 @@ export async function getTodos(containtId: string) {
 
 	try {
 		const r = await client.send(qC);
-		return r.Items;
+		return arrayQuitPrefix({
+			arr: r.Items as DynamoTodoResponse[],
+			indexes: ["pk", "sk", "gs1_pk", "gs1_sk"],
+		});
 	} catch (error) {
 		console.log("Ocurrio un error al intentar query", error);
 	}
