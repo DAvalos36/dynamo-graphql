@@ -1,15 +1,15 @@
 import { DeleteCommand, type DeleteCommandInput } from "@aws-sdk/lib-dynamodb";
 import { TABLE_NAME } from "..";
-import type { DeleteContainer, DeleteTodo } from "../types";
+import { entityPrefix, type DeleteContainer, type DeleteTodo } from "../types";
 import { client } from "../clientDynamo";
+import { addPrefix } from "../utils";
 
 export async function deleteContainer(data: DeleteContainer) {
-	console.log({ data });
 	const input: DeleteCommandInput = {
 		TableName: TABLE_NAME,
 		Key: {
-			pk: data.userId,
-			sk: data.containerId,
+			pk: addPrefix({ prefix: entityPrefix.user, id: data.userId }),
+			sk: addPrefix({ prefix: entityPrefix.container, id: data.containerId }),
 		},
 	};
 	const dd = new DeleteCommand(input);
@@ -25,8 +25,8 @@ export async function deleteTodo(data: DeleteTodo) {
 	const input: DeleteCommandInput = {
 		TableName: TABLE_NAME,
 		Key: {
-			pk: data.todoId,
-			sk: data.todoId,
+			pk: addPrefix({ prefix: entityPrefix.todo, id: data.todoId }),
+			sk: addPrefix({ prefix: entityPrefix.todo, id: data.todoId }),
 		},
 	};
 	const dd = new DeleteCommand(input);
