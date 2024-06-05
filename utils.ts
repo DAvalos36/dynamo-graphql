@@ -25,6 +25,16 @@ function easyQuitPrefix(pk: string): string {
 	return pk;
 }
 
+export function quitMultiplePrefix<T>({object,indexes}:{object: T, indexes: (keyof T)[]}){
+	indexes.forEach((index) => {
+		if (object[index] && typeof object[index] === "string") {
+			object[index] = easyQuitPrefix(
+				object[index] as unknown as string,
+			) as unknown as T[keyof T];
+		}
+	});
+}
+
 export function arrayQuitPrefix<T>({
 	arr,
 	indexes,
