@@ -9,6 +9,7 @@ import {
 } from "../types";
 import shortUUID from "short-uuid";
 import { hash } from "bcrypt";
+import { addPrefix } from "../utils";
 
 export async function newUser(username: string, password: string) {
 	const ha = await hash(password, 10);
@@ -38,12 +39,13 @@ export async function newUser(username: string, password: string) {
 }
 
 export async function newContainer(data: INewContainer) {
-	const sk = `${entityPrefix.container}${shortUUID.generate()}`;
+	const uuid = shortUUID.generate();
+	const sk = addPrefix({ id: uuid, prefix: entityPrefix.container });
 	const date = Date.now();
 	const input: PutCommandInput = {
 		TableName: TABLE_NAME,
 		Item: {
-			pk: data.userId.startsWith("u#") ? data.userId : `u#${data.userId}`, //Quitar esto
+			pk: addPrefix({ prefix: entityPrefix.user, id: data.userId }),
 			sk: sk,
 			title: data.title,
 			creationDate: date.toString(),
@@ -54,14 +56,15 @@ export async function newContainer(data: INewContainer) {
 	try {
 		const r = await client.send(pi);
 		console.log("Container creado correctamete", r);
-		return sk;
+		return uuid;
 	} catch (error) {
 		console.log("Ocurrio un error al crear un contenedor", error);
 	}
 }
 
 export async function newTodo(data: INewTodo) {
-	const pk = `${entityPrefix.todo}${shortUUID.generate()}`;
+	const uuid = shortUUID.generate();
+	const pk = addPrefix({ id: uuid, prefix: entityPrefix.todo });
 	const date = Date.now();
 	const input: PutCommandInput = {
 		TableName: TABLE_NAME,
@@ -70,9 +73,10 @@ export async function newTodo(data: INewTodo) {
 			sk: pk,
 			title: data.title,
 			content: data.content,
-			gs1_pk: data.containtId.startsWith(entityPrefix.container)
-				? data.containtId
-				: `${entityPrefix.container}${data.containtId}`,
+			gs1_pk: addPrefix({
+				prefix: entityPrefix.container,
+				id: data.containtId,
+			}),
 			gs1_sk: pk,
 			creationDate: date.toString(),
 			priority: data.priority ? data.priority.toString() : "0",
@@ -84,7 +88,7 @@ export async function newTodo(data: INewTodo) {
 	try {
 		const r = await client.send(pi);
 		console.log("Tara (todo) creada corretamente", r);
-		return pk;
+		return uuid;
 	} catch (error) {
 		console.log("ERROR al crear tarea", error);
 	}
