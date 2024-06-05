@@ -20,7 +20,7 @@ export function quitPrefix({
 
 function easyQuitPrefix(pk: string): string {
 	if (pk.includes("#")) {
-		pk.split("#")[1];
+		return pk.split("#")[1];
 	}
 	return pk;
 }
