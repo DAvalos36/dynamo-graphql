@@ -1,6 +1,5 @@
 //
 import "dotenv/config";
-import { updateTodo } from "./opretarions";
 
 import { getContainers, getTodos, getUser } from "./resolvers/querys";
 import { newContainer, newTodo, newUser } from "./resolvers/creations";
@@ -9,10 +8,15 @@ import { deleteContainer, deleteTodo } from "./resolvers/deletes";
 import { readFileSync } from "node:fs";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
+import { graphql, GraphQLError } from "graphql";
+import { jwtVerify } from "jose";
+import { env } from "node:process";
 
 const typeDefs = readFileSync("./graphql/schema.graphql", {
 	encoding: "utf-8",
 });
+
+const textEncoder = new TextEncoder();
 
 export const TABLE_NAME = "todo";
 
@@ -28,6 +32,7 @@ const resolvers = {
 			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 			contextValue: any,
 		) => {
+			if (contextValue.user === undefined) return null;
 			const r = await getContainers(args.userId);
 			return r;
 		},
@@ -107,7 +112,19 @@ const server = new ApolloServer({
 	resolvers,
 });
 async function main() {
-	const { url } = await startStandaloneServer(server);
+	const { url } = await startStandaloneServer(server, {
+		context: async ({ req }) => {
+			const token = req.headers.authorization || "";
+
+			try {
+				const e = await jwtVerify(token, textEncoder.encode(env.JWT_SECRET));
+				console.log("JWT TODO BIEN", { e });
+				return { user: e.payload };
+			} catch (error) {
+				return { user: undefined };
+			}
+		},
+	});
 }
 
 main();
