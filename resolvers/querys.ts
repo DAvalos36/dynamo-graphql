@@ -24,7 +24,7 @@ export async function getUser(username: string) {
 	try {
 		const r = await client.send(gtIt);
 		const info = r.Item as unknown as DynamoUserResponse;
-		console.log("User info", info);
+		return info
 	} catch (error) {
 		console.log("Error", error);
 	}
