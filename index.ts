@@ -18,6 +18,7 @@ import { graphql, GraphQLError, parse } from "graphql";
 
 import type { DynamoUserResponse } from "./types";
 import { createJwt } from "./createJwt";
+import { sign } from "node:crypto";
 
 const app = express();
 
@@ -122,6 +123,17 @@ const resolvers = {
 				}
 				return await createJwt({ username: u.pk }, textEncoder);
 			} catch (error) {}
+		},
+		signIn: async (
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			_: any,
+			args: {
+				username: string;
+				password: string;
+			},
+		) => {
+			const nu = await newUser(args.username, args.password);
+			return "Ok";
 		},
 	},
 };
