@@ -50,4 +50,7 @@ type Mutation {
 		title: String
 		content: String
 		priority: Int): Todo!
+	"Return JWT"
+	login(username: String!, password: String!): String!
+	signIn(username: String!, password: String!): String!
 }
